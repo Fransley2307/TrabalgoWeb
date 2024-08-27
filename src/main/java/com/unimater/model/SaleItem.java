@@ -26,6 +26,10 @@ public class SaleItem implements Entity {
 
     }
 
+    public SaleItem() {
+
+    }
+
     @Override
     public Entity constructFromResultSet(ResultSet rs) throws SQLException {
         return new SaleItem(rs);
