@@ -46,7 +46,7 @@ public abstract class GenericDAOImpl<T extends Entity> implements GenericDAO<T> 
         try {
             PreparedStatement pstmt;
             if (object.getId() == 0) {
-                pstmt = connection.prepareStatem    ent("INSERT INTO "
+                pstmt = connection.prepareStatement("INSERT INTO "
                         + tableName
                         + " ("
                         + columns.stream().collect(Collectors.joining(", "))

@@ -4,13 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SaleItem implements Entity {
+public class SaleItem implements Entity{
     private int id;
-    private int product;
+    private Product product;
     private int quantity;
     private double percentualDiscount;
 
-    public SaleItem(int id, int product, int quantity, double percentualDiscount) {
+    public SaleItem(int id, Product product, int quantity, double percentualDiscount) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
@@ -18,16 +18,13 @@ public class SaleItem implements Entity {
     }
 
     public SaleItem(ResultSet rs) throws SQLException {
-        super();
         this.id = rs.getInt("id");
-        this.product = rs.getInt("product_id");
         this.quantity = rs.getInt("quantity");
-        this.percentualDiscount = rs.getDouble("percentualDiscount");
-
+        this.percentualDiscount = rs.getDouble("percentual_discount");
+        this.product = new Product(rs.getInt("product_id"));
     }
 
     public SaleItem() {
-
     }
 
     @Override
@@ -37,19 +34,21 @@ public class SaleItem implements Entity {
 
     @Override
     public PreparedStatement prepareStatement(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setInt(1, getProduct());
+        preparedStatement.setInt(1, getProduct().getId());
         preparedStatement.setInt(2, getQuantity());
         preparedStatement.setDouble(3, getPercentualDiscount());
-
-
         return preparedStatement;
     }
-
+    public PreparedStatement prepareStatement(PreparedStatement preparedStatement, Sale sale) throws SQLException{
+        preparedStatement = prepareStatement(preparedStatement);
+        preparedStatement.setInt(4, sale.getId());
+        return preparedStatement;
+    }
     public int getId() {
         return id;
     }
 
-    public int getProduct() {
+    public Product getProduct() {
         return product;
     }
 
@@ -67,5 +66,19 @@ public class SaleItem implements Entity {
 
     public void setPercentualDiscount(double percentualDiscount) {
         this.percentualDiscount = percentualDiscount;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    @Override
+    public String toString() {
+        return "SaleItem{" +
+                "id=" + id +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                ", percentualDiscount=" + percentualDiscount +
+                '}';
     }
 }

@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Product implements Entity {
+public class Product implements Entity{
 
     private int id;
     private ProductType productType;
@@ -18,15 +18,18 @@ public class Product implements Entity {
         this.value = value;
     }
 
-    public Product(ResultSet rs) throws SQLException {
-        super();
-        this.id = rs.getInt("id");
-        this.value = rs.getDouble("value");
-        this.description = rs.getString("description");
+    public Product(ResultSet resultSet) throws SQLException{
+        this.id = resultSet.getInt("id");
+        this.description = resultSet.getString("description");
+        this.value = resultSet.getDouble("value");
+        this.productType = new ProductType(resultSet.getInt("product_type_id"));
     }
 
     public Product() {
+    }
 
+    public Product(int id) {
+        this.id = id;
     }
 
     @Override
@@ -36,9 +39,9 @@ public class Product implements Entity {
 
     @Override
     public PreparedStatement prepareStatement(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, getDescription());
-        preparedStatement.setDouble(2, getValue());
-
+        preparedStatement.setInt(1, this.getProductType().getId());
+        preparedStatement.setString(2, getDescription());
+        preparedStatement.setDouble(3, getValue());
         return preparedStatement;
     }
 
@@ -62,4 +65,17 @@ public class Product implements Entity {
         this.id = id;
     }
 
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productType=" + productType +
+                ", description='" + description + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

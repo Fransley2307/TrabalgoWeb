@@ -1,21 +1,31 @@
 package com.unimater.dao;
 
-import com.unimater.model.Product;
 import com.unimater.model.Sale;
+import com.unimater.model.SaleItem;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.function.Supplier;
 
-public class SaleDAO extends GenericDAOImpl<Sale> implements GenericDAO<Sale>{
+public class SaleDAO extends GenericDAOImpl<Sale> implements GenericDAO<Sale> {
+
     private Connection connection;
     private final String TABLE_NAME = "sale";
 
-    private final List<String> COLUMNS = List.of("inset_at");
+    private final List<String> COLUMNS = List.of("id", "insert_at");
+
+    private SaleItemDAO saleItemDAO;
 
     public SaleDAO(Connection connection) {
         super(Sale::new, connection);
         super.tableName = TABLE_NAME;
         super.columns = COLUMNS;
+        this.connection = connection;
     }
+
+    public Sale feedSaleItems(Sale sale){
+        saleItemDAO = new SaleItemDAO(connection);
+        sale.setSaleItems(saleItemDAO.findBySaleId(sale.getId()));
+        return sale;
+    }
+
 }

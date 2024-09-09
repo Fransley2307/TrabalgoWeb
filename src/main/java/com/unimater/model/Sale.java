@@ -4,9 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
-public class Sale implements Entity{
+public class Sale implements Entity {
 
     private int id;
     private List<SaleItem> saleItems;
@@ -18,12 +19,9 @@ public class Sale implements Entity{
         this.insertAt = insertAt;
     }
 
-    public Sale(ResultSet rs) throws SQLException {
-        super();
+    public Sale(ResultSet rs) throws SQLException{
         this.id = rs.getInt("id");
-        this.saleItems = null;
-        this.insertAt = rs.getTimestamp("");
-
+        this.insertAt = rs.getTimestamp("insert_at");
     }
 
     public Sale() {
@@ -37,9 +35,8 @@ public class Sale implements Entity{
 
     @Override
     public PreparedStatement prepareStatement(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setTimestamp(1, getInsertAt());
-
-
+        preparedStatement.setInt(1, getId());
+        preparedStatement.setTimestamp(2, Timestamp.from(Instant.now()));
         return preparedStatement;
     }
 
@@ -65,5 +62,14 @@ public class Sale implements Entity{
 
     public void setInsertAt(Timestamp insertAt) {
         this.insertAt = insertAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "id=" + id +
+                ", saleItems=" + saleItems +
+                ", insertAt=" + insertAt +
+                '}';
     }
 }
