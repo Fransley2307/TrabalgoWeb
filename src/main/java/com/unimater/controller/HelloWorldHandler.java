@@ -19,5 +19,6 @@ public class HelloWorldHandler
         outputStream.write(helloWorldByte);
         outputStream.close();
         System.out.println("Executou novamente");
+        
     }
 }
